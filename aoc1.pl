@@ -6,8 +6,16 @@ aoc1:-
 
 aoc1b:-
     get_list(List),
-    find_copy(List, Copy),
+    number_list(List, NList),
+    find_copy(NList, Copy),
     writeln(Copy).
+
+aoc1bTest:-
+    get_list1(List),
+    number_list(List, NList),
+    find_copy(NList, Copy),
+    writeln(Copy).
+    
 
 
 sum(X, Sum):-
@@ -24,21 +32,30 @@ find_copy(List, Copy):-
     find_copy(List, List, Copy, [], 0).
 
 find_copy(CompleteList, [], Copy, Sums, PresentSum):-
+    !,
+    write("Switch "),
+    writeln(PresentSum),
     find_copy(CompleteList, CompleteList, Copy, Sums, PresentSum).
 
-find_copy(_, [X|_], NewSum, Sums, PresentSum):-
-    number_string(N, X),
-    NewSum is PresentSum + N,
-    member(NewSum, Sums), !.
 
 find_copy(CompleteList, [X|Xr], Copy, Sums, PresentSum):-
-    number_string(N, X),
-    NewSum is PresentSum + N,
+    NewSum is PresentSum + X,
+    \+member(NewSum, Sums),
+    !,
     find_copy(CompleteList, Xr, Copy, [NewSum|Sums], NewSum).
+
+find_copy(_, [X|_], NewSum, Sums, PresentSum):-
+    NewSum is PresentSum + X,
+    member(NewSum, Sums), !.
+
+number_list([], []).
+number_list([X|Xr], [N|Nr]):-
+    number_string(N, X),
+    number_list(Xr, Nr).
 
 
 get_list1(X):-
-    split_string("+3, +3, +4, -2, -4", ",", " ", X).
+    split_string("+77000, +7, +7, -2, -7, -4, -77000", ",", " ", X).
 
 get_list(X):-split_string("-19
 +2
